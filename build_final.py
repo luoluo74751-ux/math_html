@@ -1,5 +1,5 @@
 """Build final V4 from clean template + data"""
-import json, os
+import json, os, base64
 
 BASE = r'c:\Users\luoluo\Desktop\考研数学这十年\2026考研数学这十年内'
 
@@ -7,6 +7,7 @@ with open(os.path.join(BASE, '知识梳理_v3.json'), 'r', encoding='utf-8') as 
     data = json.load(f)
 
 kps_json = json.dumps(data['knowledge_points'], ensure_ascii=False)
+kps_b64 = base64.b64encode(kps_json.encode('utf-8')).decode('ascii')
 
 html = r'''<!DOCTYPE html>
 <html lang="zh-CN">
@@ -28,14 +29,16 @@ html = r'''<!DOCTYPE html>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
 :root {
-  --c-primary: #D4544A; --c-primary-hover: #C04038; --c-primary-light: #FDF0EE; --c-primary-ghost: #FFF5F4;
-  --c-accent: #B87840; --c-accent-light: #FDF6EF; --c-success: #5D9B6F; --c-success-light: #EDF6EF;
-  --c-bg: #FBFAF8; --c-bg-alt: #F4F1ED; --c-surface: #FFFFFF; --c-surface-glass: rgba(255,255,255,0.82);
-  --c-text: #2C1F18; --c-text-secondary: #8A7B72; --c-text-muted: #B5A9A1;
-  --c-border: #EDE7E2; --c-border-light: #F4F0EC;
-  --shadow-xs: 0 1px 2px rgba(44,31,24,0.03); --shadow-sm: 0 1px 3px rgba(44,31,24,0.04), 0 1px 2px rgba(44,31,24,0.03);
-  --shadow-md: 0 4px 20px rgba(44,31,24,0.05), 0 1px 3px rgba(44,31,24,0.03);
-  --shadow-lg: 0 12px 40px rgba(44,31,24,0.07), 0 2px 8px rgba(44,31,24,0.04);
+  --c-primary: #E8564A; --c-primary-hover: #D4433A; --c-primary-light: #FEF0EE; --c-primary-ghost: #FFF5F4;
+  --c-accent: #C88045; --c-accent-light: #FEF6EF; --c-success: #5EA86E; --c-success-light: #EDF6F0;
+  --c-bg: #FCFAF7; --c-bg-alt: #F5F1EC; --c-surface: #FFFFFF; --c-surface-glass: rgba(255,255,255,0.8);
+  --c-text: #2B1B13; --c-text-secondary: #8C7B72; --c-text-muted: #B8AAA0;
+  --c-border: #EDE7E1; --c-border-light: #F4EFEA;
+  --shadow-xs: 0 1px 2px rgba(44,31,24,0.03);
+  --shadow-sm: 0 1px 3px rgba(44,31,24,0.05), 0 1px 2px rgba(44,31,24,0.03);
+  --shadow-md: 0 4px 24px rgba(44,31,24,0.06), 0 1px 4px rgba(44,31,24,0.03);
+  --shadow-lg: 0 12px 44px rgba(44,31,24,0.08), 0 3px 10px rgba(44,31,24,0.04);
+  --shadow-glow: 0 0 0 3px rgba(232,86,74,0.12);
   --radius-sm: 10px; --radius-md: 16px; --radius-lg: 22px; --radius-xl: 30px; --radius-full: 9999px;
   --font-display: 'Noto Serif SC', 'PingFang SC', serif;
   --font-body: 'Inter', 'PingFang SC', 'Hiragino Sans GB', -apple-system, sans-serif;
@@ -65,12 +68,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 .stats-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--c-text-secondary);margin-bottom:5px}
 .stats-val{font-weight:600;color:var(--c-text);font-variant-numeric:tabular-nums}
 .progress-track{height:4px;border-radius:2px;background:var(--c-border-light);margin-top:10px;overflow:hidden}
-.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--c-primary),var(--c-accent));transition:width .5s var(--ease-spring)}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--c-primary),var(--c-accent));transition:width .5s var(--ease-spring);position:relative}
+.progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shimmer 2s infinite}@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .sidebar-nav{flex:1;overflow-y:auto}
 .sidebar-section{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--c-primary);opacity:.75;padding:16px 10px 8px}
 .sidebar-kp{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:13.5px;font-weight:450;color:var(--c-text-secondary);transition:all .15s var(--ease-out)}
 .sidebar-kp:hover{background:var(--c-primary-ghost);color:var(--c-primary-hover)}
-.sidebar-kp.active{background:var(--c-primary-light);color:var(--c-primary-hover);font-weight:600}
+.sidebar-kp.active{background:var(--c-primary-light);color:var(--c-primary-hover);font-weight:600;box-shadow:inset 3px 0 0 var(--c-primary)}
 .sidebar-kp .kp-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sidebar-kp .kp-badge{font-size:11px;font-weight:550;padding:2px 8px;border-radius:var(--radius-full);background:var(--c-primary-light);color:var(--c-primary-hover);flex-shrink:0}
 .sidebar-footer{margin-top:auto;padding-top:14px;display:flex;flex-direction:column;gap:8px}
@@ -103,7 +107,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 .card-action-btn{padding:7px 16px;border-radius:var(--radius-full);font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--c-border);background:var(--c-surface);color:var(--c-text-secondary);font-family:var(--font-body);transition:all .15s var(--ease-out);display:flex;align-items:center;gap:5px}
 .card-action-btn:hover{background:var(--c-primary-light);color:var(--c-primary-hover);border-color:transparent}.card-action-btn:active{transform:scale(.97)}
 #formula-list{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 28px 28px;display:flex;flex-direction:column;gap:16px}
-.formula-item{background:var(--c-bg);border-radius:var(--radius-md);border:1px solid var(--c-border-light);overflow:hidden;transition:all .3s var(--ease-out);animation:cardIn .45s var(--ease-out) both}
+.formula-item{background:var(--c-bg);border-radius:var(--radius-md);border:1px solid var(--c-border-light);overflow:hidden;transition:all .3s var(--ease-out),box-shadow .3s var(--ease-out);animation:cardIn .45s var(--ease-out) both}
+.formula-item:hover{border-color:var(--c-border);box-shadow:0 2px 12px rgba(232,86,74,0.06),0 0 0 1px rgba(232,86,74,0.04)}
 .formula-item:nth-child(1){animation-delay:0s}.formula-item:nth-child(2){animation-delay:.04s}.formula-item:nth-child(3){animation-delay:.08s}.formula-item:nth-child(4){animation-delay:.12s}.formula-item:nth-child(5){animation-delay:.16s}.formula-item:nth-child(6){animation-delay:.2s}.formula-item:nth-child(n+7){animation-delay:.24s}
 @keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .formula-item.mastered{border-color:rgba(93,155,111,.25)}.formula-item.mastered .formula-status{background:var(--c-success-light);color:var(--c-success)}
@@ -231,7 +236,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 </div>
 <input type="file" id="import-file" accept=".json" class="hidden" onchange="importProgress(event)">
 <script>
-const KNOWLEDGE_POINTS = __DATA_PLACEHOLDER__;
+(function(){var h=location.hostname;if(h&&h!=='localhost'&&h!=='127.0.0.1'&&h.indexOf('netlify.app')===-1&&h.indexOf('github.io')===-1){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#999;font-size:16px">授权已过期</div>';return}})();
+var _D='__DATA_B64__';var KNOWLEDGE_POINTS=JSON.parse(atob(_D));_D=null;
 const TOTAL_FORMULAS = __TOTAL_PLACEHOLDER__;
 const state={currentKP:null,mustOnly:false,unmasteredOnly:false,subjectFilter:'all',darkMode:false,mastered:{},revealed:new Set,dailyLastDate:''};
 const SK='kv4_p',TK='kv4_t',DK='kv4_d';
@@ -368,8 +374,8 @@ init();
 </body>
 </html>'''
 
-# Embed data
-html = html.replace('__DATA_PLACEHOLDER__', kps_json)
+# Embed data (base64 encoded in HTML, decoded at runtime)
+html = html.replace('__DATA_B64__', kps_b64)
 html = html.replace('__TOTAL_PLACEHOLDER__', str(data['total_formulas']))
 
 out = os.path.join(BASE, '考研数学练卡_v4.html')
@@ -391,8 +397,9 @@ if "'\\\\text{$&}'" in check or "'\\text{$&}'" in check:
         print('OK - double backslash for text')
     else:
         print('WARN - check text escaping')
-# Verify data
-data_idx = check.find('const KNOWLEDGE_POINTS = [')
-data_end = check.index('];', data_idx) + 1
-jd = json.loads(check[data_idx + len('const KNOWLEDGE_POINTS = '):data_end])
-print(f'Verify: {len(jd)} KPs loaded')
+# Verify data (base64 encoded)
+import re as _re
+m = _re.search(r"var _D='([^']+)'", check)
+if m:
+    jd = json.loads(base64.b64decode(m.group(1)).decode('utf-8'))
+    print(f'Verify: {len(jd)} KPs loaded')
