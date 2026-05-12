@@ -228,8 +228,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <div id="daily-modal" class="modal-overlay hidden">
   <div class="modal-card">
     <button class="modal-close" onclick="closeDailyModal()">✕</button>
-    <div class="modal-title">🚀 坚持下去，你终将上岸！</div>
-    <div class="modal-body"><p style="font-size:14px;color:var(--c-text);margin-bottom:8px">每一个填空都是通往研究生的台阶</p><p style="font-size:12px;color:var(--c-text-muted)">今日打卡 · 不负光阴</p></div>
+    <div class="modal-title" id="notice-title"></div>
+    <div class="modal-body" id="notice-body"></div>
     <button class="modal-btn" onclick="closeDailyModal()">开始学习</button>
   </div>
 </div>
@@ -373,9 +373,19 @@ function resetAll(){showCfm('确定清空全部学习进度？此操作不可撤
 function showCel(m){const el=document.createElement('div');el.className='celebration';el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .5s ease';setTimeout(function(){el.remove()},500)},3000)}
 function showToast(m,t){const el=document.createElement('div');el.className='toast'+(t?' '+t:'');el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(function(){el.remove()},300)},2500)}
 function showCfm(m,cb){const ov=document.createElement('div');ov.className='dialog-overlay';ov.innerHTML='<div class="dialog-box"><p class="dialog-text">'+m+'</p><div class="dialog-actions"><button class="btn-forget" onclick="this.closest(\'.dialog-overlay\').remove()">取消</button><button class="btn-master" id="dok">确定</button></div></div>';document.body.appendChild(ov);ov.querySelector('#dok').onclick=function(){ov.remove();cb()};ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()})}
-function showDailyModal(f){if(!f&&!shouldDaily())return;document.getElementById('daily-modal').classList.remove('hidden');document.getElementById('bell-dot').style.display='none'}
+function showDailyModal(f){if(f){document.getElementById('daily-modal').classList.remove('hidden');return}
+fetch('notice.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(n){
+  var sv=localStorage.getItem('notice_v')||'0';
+  if(String(n.v)!==sv){
+    localStorage.setItem('notice_v',String(n.v));
+    document.getElementById('notice-title').textContent=n.title||'';
+    document.getElementById('notice-body').innerHTML=n.body||'';
+    if(n.img){var el=document.getElementById('notice-body');el.innerHTML+='<img src=\"'+n.img+'\" style=\"max-width:100%;border-radius:16px;margin-top:12px\">'}
+    document.getElementById('daily-modal').classList.remove('hidden');
+    document.getElementById('bell-dot').style.display='none';
+  }
+}).catch(function(){})}
 function closeDailyModal(){document.getElementById('daily-modal').classList.add('hidden');document.getElementById('bell-dot').style.display='block'}
-function shouldDaily(){var today=new Date().toISOString().slice(0,10);var ver=localStorage.getItem('kaoyan_modal_ver')||'';if(state.dailyLastDate!==today||ver!=='v5.0.2'){state.dailyLastDate=today;localStorage.setItem('kaoyan_modal_ver','v5.0.2');saveS();return true}return false}
 function toggleSidebar(){const sb=document.getElementById('sidebar'),ov=document.getElementById('sidebar-overlay');sb.classList.toggle('open');ov.classList.toggle('show')}
 function openSettings(){syncToggles();document.getElementById('settings-modal').classList.remove('hidden')}
 function closeSettings(){document.getElementById('settings-modal').classList.add('hidden')}
@@ -387,7 +397,7 @@ window.addEventListener('resize',function(){if(window.innerWidth>768){document.g
 function init(){
   loadP();loadS();applyTheme();rPills();rSidebar();uStats();
   const kps=fKPs();if(kps.length>0){state.currentKP=kps[0].id;rSidebar();rCard()}
-  setTimeout(function(){if(shouldDaily())showDailyModal(true)},600);
+  setTimeout(function(){showDailyModal(false)},600);
   setTimeout(checkUpdate,2000);
   if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
 }
