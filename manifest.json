@@ -1,16 +1,24 @@
 {
-  "name": "考研数学·知识点聚合填空练卡",
+  "name": "考研数学 · 知识点填空练卡",
   "short_name": "考研数学练卡",
-  "description": "考研数学公式记忆填空练习工具",
+  "description": "按知识点聚合的数学公式填空记忆工具",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#F9F7F5",
-  "theme_color": "#F9F7F5",
+  "background_color": "#FBFAF8",
+  "theme_color": "#D4544A",
   "orientation": "any",
-  "icons": [{
-    "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23FF6B6B'/%3E%3Ctext x='96' y='120' text-anchor='middle' font-size='96' font-family='serif' fill='white'%3E%26%238721%3B%3C/text%3E%3C/svg%3E",
-    "sizes": "192x192",
-    "type": "image/svg+xml",
-    "purpose": "any maskable"
-  }]
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23D4544A'/%3E%3Ctext x='96' y='124' text-anchor='middle' font-size='100' font-family='serif' fill='white'%3E%E2%88%91%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%23D4544A'/%3E%3Ctext x='256' y='330' text-anchor='middle' font-size='280' font-family='serif' fill='white'%3E%E2%88%91%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }

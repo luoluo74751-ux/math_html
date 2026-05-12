@@ -6,7 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="考研数学练卡">
-<meta name="theme-color" content="#FBF8F4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#D4544A">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><rect width='180' height='180' rx='36' fill='%23D4544A'/><text x='90' y='112' text-anchor='middle' font-size='90' font-family='serif' fill='white'>&#8721;</text></svg>">
 <title>考研数学 · 知识点填空练卡</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -348,6 +351,7 @@ function init(){
   const kps=fKPs();if(kps.length>0){state.currentKP=kps[0].id;rSidebar();rCard()}
   setTimeout(function(){if(shouldDaily())showDailyModal(true)},600);
   setTimeout(checkUpdate,2000);
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
 }
 init();
 </script>

@@ -16,7 +16,10 @@ html = r'''<!DOCTYPE html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="考研数学练卡">
-<meta name="theme-color" content="#FBF8F4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#D4544A">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><rect width='180' height='180' rx='36' fill='%23D4544A'/><text x='90' y='112' text-anchor='middle' font-size='90' font-family='serif' fill='white'>&#8721;</text></svg>">
 <title>考研数学 · 知识点填空练卡</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -198,8 +201,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <div id="daily-modal" class="modal-overlay hidden">
   <div class="modal-card">
     <button class="modal-close" onclick="closeDailyModal()">✕</button>
-    <div class="modal-title">考研数学 · 填空练卡</div>
-    <div class="modal-body"><p style="margin-bottom:10px">每天坚持填空练习，公式记忆更牢固</p><p style="font-size:12px;color:var(--c-text-muted)">左侧选择知识点 · 点击查看答案<br>标记掌握状态 · 支持离线使用</p></div>
+    <div class="modal-title">我喜欢你！</div>
+    <div class="modal-body"><img src="images/2-1.png" alt="" style="max-width:100%;border-radius:16px;margin-bottom:12px"><p style="font-size:13px;color:var(--c-text-secondary)">每天坚持填空练习，公式记忆更牢固</p></div>
     <button class="modal-btn" onclick="closeDailyModal()">开始学习</button>
   </div>
 </div>
@@ -358,6 +361,7 @@ function init(){
   const kps=fKPs();if(kps.length>0){state.currentKP=kps[0].id;rSidebar();rCard()}
   setTimeout(function(){if(shouldDaily())showDailyModal(true)},600);
   setTimeout(checkUpdate,2000);
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
 }
 init();
 </script>
