@@ -1,10 +1,38 @@
-"""Build final V4 from clean template + data"""
-import json, os, base64
+"""Build final V4 from clean template + data - embeds images as base64"""
+import json, os, base64, re
 
 BASE = r'c:\Users\luoluo\Desktop\考研数学这十年\2026考研数学这十年内'
+IMG_DIR = os.path.join(BASE, 'images')
 
 with open(os.path.join(BASE, '知识梳理_v3.json'), 'r', encoding='utf-8') as f:
     data = json.load(f)
+
+# Pre-load images as base64
+img_cache = {}
+if os.path.isdir(IMG_DIR):
+    for fname in os.listdir(IMG_DIR):
+        fpath = os.path.join(IMG_DIR, fname)
+        if os.path.isfile(fpath):
+            ext = os.path.splitext(fname)[1].lower()
+            mime_map = {'.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.gif':'image/gif','.svg':'image/svg+xml','.webp':'image/webp'}
+            mime = mime_map.get(ext, 'image/png')
+            with open(fpath, 'rb') as f:
+                b64 = base64.b64encode(f.read()).decode('ascii')
+                img_cache[fname] = f'data:{mime};base64,{b64}'
+    print(f'Cached {len(img_cache)} images as base64')
+
+# Process hints: replace [img:path] with base64 data URIs
+def embed_img(match):
+    path = match.group(1)
+    fname = os.path.basename(path)
+    if fname in img_cache:
+        return f'[img:{img_cache[fname]}]'
+    return match.group(0)
+
+for kp in data['knowledge_points']:
+    for f in kp.get('formulas', []):
+        if f.get('hint'):
+            f['hint'] = re.sub(r'\[img:([^\]]+)\]', embed_img, f['hint'])
 
 kps_json = json.dumps(data['knowledge_points'], ensure_ascii=False)
 kps_b64 = base64.b64encode(kps_json.encode('utf-8')).decode('ascii')
@@ -178,7 +206,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <div id="app">
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside id="sidebar">
-  <div class="sidebar-header"><div class="sidebar-logo">∑</div><span class="sidebar-title">考研数学练卡</span></div>
+  <div class="sidebar-header"><div class="sidebar-logo">∑</div><span class="sidebar-title">考研数学练卡</span><span id="sw-dot" style="width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0;margin-left:auto" title="离线状态"></span></div>
   <nav class="sidebar-nav" id="sidebar-nav"></nav>
 </aside>
 <main id="main">
@@ -367,7 +395,7 @@ function init(){
   const kps=fKPs();if(kps.length>0){state.currentKP=kps[0].id;rSidebar();rCard()}
   setTimeout(function(){if(shouldDaily())showDailyModal(true)},600);
   setTimeout(checkUpdate,2000);
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(r){var d=document.getElementById('sw-dot');if(d)d.style.background='#5EA86E'}).catch(function(e){var d=document.getElementById('sw-dot');if(d)d.style.background='#E8564A'})}
 }
 init();
 </script>
