@@ -258,7 +258,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 </div>
 <input type="file" id="import-file" accept=".json" class="hidden" onchange="importProgress(event)">
 <script>
-(function(){var h=location.hostname;if(h&&h!=='localhost'&&h!=='127.0.0.1'&&h.indexOf('netlify.app')===-1&&h.indexOf('github.io')===-1){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#999;font-size:16px">授权已过期</div>';return}})();
+(function(){var h=location.hostname;if(h&&h!=='localhost'&&h!=='127.0.0.1'&&h.indexOf('netlify.app')===-1&&h.indexOf('github.io')===-1&&h.indexOf('pages.dev')===-1){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#999;font-size:16px">授权已过期</div>';return}})();
 var _D='__DATA_B64__';var _b=new Uint8Array(atob(_D).split('').map(function(c){return c.charCodeAt(0)}));var KNOWLEDGE_POINTS=JSON.parse(new TextDecoder('utf-8').decode(_b));_D=null;_b=null;
 const TOTAL_FORMULAS = __TOTAL_PLACEHOLDER__;
 const state={currentKP:null,mustOnly:false,unmasteredOnly:false,subjectFilter:'all',darkMode:false,mastered:{},revealed:new Set,dailyLastDate:''};
