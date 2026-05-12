@@ -1,0 +1,16 @@
+{
+  "name": "考研数学·知识点聚合填空练卡",
+  "short_name": "考研数学练卡",
+  "description": "考研数学公式记忆填空练习工具",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F9F7F5",
+  "theme_color": "#F9F7F5",
+  "orientation": "any",
+  "icons": [{
+    "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23FF6B6B'/%3E%3Ctext x='96' y='120' text-anchor='middle' font-size='96' font-family='serif' fill='white'%3E%26%238721%3B%3C/text%3E%3C/svg%3E",
+    "sizes": "192x192",
+    "type": "image/svg+xml",
+    "purpose": "any maskable"
+  }]
+}

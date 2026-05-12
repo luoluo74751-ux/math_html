@@ -1,0 +1,41 @@
+# PDFs
+*.pdf
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.claude/
+
+# Backup files
+*_backup.*
+
+# Temp build scripts
+build_html.py
+build_html_v2.py
+build_v3_final.py
+build_v4.py
+verify_output.py
+transform_data.py
+parse_knowledge.py
+insert_kp35.py
+add_surfaces.py
+
+# Old JSON
+知识梳理.json
+知识梳理.txt
+知识梳理_new.json
+
+# Old HTML
+考研数学练卡.html
+考研数学练卡_v2.html
+考研数学练卡_v3.html
+考研数学练卡_最终版.html
+
+# Temp knowledge points
+knowledge_points/
+
+# Large backups
+知识梳理_v3_backup.json
