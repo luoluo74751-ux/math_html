@@ -347,7 +347,7 @@ function showToast(m,t){const el=document.createElement('div');el.className='toa
 function showCfm(m,cb){const ov=document.createElement('div');ov.className='dialog-overlay';ov.innerHTML='<div class="dialog-box"><p class="dialog-text">'+m+'</p><div class="dialog-actions"><button class="btn-forget" onclick="this.closest(\'.dialog-overlay\').remove()">取消</button><button class="btn-master" id="dok">确定</button></div></div>';document.body.appendChild(ov);ov.querySelector('#dok').onclick=function(){ov.remove();cb()};ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()})}
 function showDailyModal(f){if(!f&&!shouldDaily())return;document.getElementById('daily-modal').classList.remove('hidden');document.getElementById('bell-dot').style.display='none'}
 function closeDailyModal(){document.getElementById('daily-modal').classList.add('hidden');document.getElementById('bell-dot').style.display='block'}
-function shouldDaily(){const today=new Date().toISOString().slice(0,10);if(state.dailyLastDate!==today){state.dailyLastDate=today;saveS();return true}return false}
+function shouldDaily(){var today=new Date().toISOString().slice(0,10);var ver=localStorage.getItem('kaoyan_modal_ver')||'';if(state.dailyLastDate!==today||ver!=='v5.0.1'){state.dailyLastDate=today;localStorage.setItem('kaoyan_modal_ver','v5.0.1');saveS();return true}return false}
 function toggleSidebar(){const sb=document.getElementById('sidebar'),ov=document.getElementById('sidebar-overlay');sb.classList.toggle('open');ov.classList.toggle('show')}
 function openSettings(){syncToggles();document.getElementById('settings-modal').classList.remove('hidden')}
 function closeSettings(){document.getElementById('settings-modal').classList.add('hidden')}
