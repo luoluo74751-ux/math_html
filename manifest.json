@@ -1,0 +1,27 @@
+{
+  "name": "考研数学 · 知识点填空练卡",
+  "short_name": "考研数学练卡",
+  "description": "考研数学公式填空自测，60个考点557条公式，离线可用",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#D4544A",
+  "background_color": "#FCFAF7",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'><rect width='192' height='192' rx='38' fill='%23D4544A'/><text x='96' y='120' text-anchor='middle' font-size='96' font-family='serif' fill='white'>&#8721;</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><rect width='512' height='512' rx='101' fill='%23D4544A'/><text x='256' y='320' text-anchor='middle' font-size='256' font-family='serif' fill='white'>&#8721;</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
