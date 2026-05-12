@@ -346,9 +346,11 @@ fetch('notice.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(
   var sv=localStorage.getItem('notice_v')||'0';
   if(String(n.v)!==sv){
     localStorage.setItem('notice_v',String(n.v));
+    // Force refresh for HTML updates
+    if(n.force){showToast('新版本已就绪，3秒后刷新...','update');setTimeout(function(){location.reload()},3000);return}
     document.getElementById('notice-title').textContent=n.title||'';
     document.getElementById('notice-body').innerHTML=n.body||'';
-    if(n.img){var el=document.getElementById('notice-body');el.innerHTML+='<img src=\"'+n.img+'\" style=\"max-width:100%;border-radius:16px;margin-top:12px\">'}
+    if(n.img){document.getElementById('notice-body').innerHTML+='<img src=\"'+n.img+'\" style=\"max-width:100%;border-radius:16px;margin-top:12px\">'}
     document.getElementById('daily-modal').classList.remove('hidden');
     document.getElementById('bell-dot').style.display='none';
   }
@@ -359,14 +361,12 @@ function openSettings(){syncToggles();document.getElementById('settings-modal').
 function closeSettings(){document.getElementById('settings-modal').classList.add('hidden')}
 function exportProgress(){const d={mastered:state.mastered,date:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='考研数学练卡_进度_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);showToast('进度已导出','success')}
 function importProgress(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);if(d.mastered){showCfm('导入将覆盖当前进度，确定吗？',function(){state.mastered=d.mastered;saveP();rSidebar();rCard();uStats();showToast('进度已导入','success')})}else showToast('文件格式无效')}catch(er){showToast('文件格式错误')}};r.readAsText(file);e.target.value=''}
-async function checkUpdate(){try{const r=await fetch('version.txt',{cache:'no-cache'});if(!r.ok)return;const v=(await r.text()).trim();if(v&&v!=='v5.0.0'){showToast('新版本已就绪，3秒后刷新...','update');setTimeout(function(){location.reload()},3000)}}catch(e){}}
 document.addEventListener('keydown',function(e){if(e.target.tagName==='INPUT')return;if(e.key==='e'||e.key==='E')expandAll();if(e.key==='c'||e.key==='C')collapseAll()});
 window.addEventListener('resize',function(){if(window.innerWidth>768){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('show')}});
 function init(){
   loadP();loadS();applyTheme();rPills();rSidebar();uStats();
   const kps=fKPs();if(kps.length>0){state.currentKP=kps[0].id;rSidebar();rCard()}
   setTimeout(function(){showDailyModal(false)},600);
-  setTimeout(checkUpdate,2000);
   if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
 }
 init();
