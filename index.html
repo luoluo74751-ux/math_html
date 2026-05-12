@@ -167,7 +167,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <div id="app">
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside id="sidebar">
-  <div class="sidebar-header"><div class="sidebar-logo">∑</div><span class="sidebar-title">考研数学练卡</span><span id="sw-dot" style="width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0;margin-left:auto" title="离线状态"></span></div>
+  <div class="sidebar-header"><div class="sidebar-logo">∑</div><span class="sidebar-title">考研数学练卡</span></div>
   <nav class="sidebar-nav" id="sidebar-nav"></nav>
 </aside>
 <main id="main">
@@ -356,7 +356,7 @@ function init(){
   const kps=fKPs();if(kps.length>0){state.currentKP=kps[0].id;rSidebar();rCard()}
   setTimeout(function(){if(shouldDaily())showDailyModal(true)},600);
   setTimeout(checkUpdate,2000);
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(r){var d=document.getElementById('sw-dot');if(d)d.style.background='#5EA86E'}).catch(function(e){var d=document.getElementById('sw-dot');if(d)d.style.background='#E8564A'})}
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
 }
 init();
 </script>
