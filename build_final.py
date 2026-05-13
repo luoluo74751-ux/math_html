@@ -147,7 +147,7 @@ html = r'''<!DOCTYPE html>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#D4544A">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="data:image/png;base64,''' + icon_b64 + '''">
+<link rel="apple-touch-icon" href="data:image/png;base64,__ICON_B64__">
 <title>考研数学 · 知识点填空练卡</title>
 <style>__KATEX_CSS__</style>
 <script>__KATEX_JS__</script>
@@ -498,6 +498,7 @@ try{init()}catch(e){document.body.innerHTML='<div style="padding:40px;text-align
 </html>'''
 
 # Embed data (base64 encoded in HTML, decoded at runtime)
+html = html.replace('__ICON_B64__', icon_b64)
 html = html.replace('__DATA_B64__', kps_b64)
 html = html.replace('__TOTAL_PLACEHOLDER__', str(data['total_formulas']))
 html = html.replace('__KATEX_CSS__', katex_css)

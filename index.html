@@ -243,7 +243,7 @@ function rSidebar(){
     h+='<div class="sidebar-section">'+s+'</div>';
     list.forEach(k=>{
       const m=kM(k),t=k.formulas.length,ac=state.currentKP===k.id?' active':'',st=k.must_memorize?' ⭐':'';
-      h+='<div class="sidebar-kp'+ac+'" onclick="selKP(''+k.id+'')"><span class="kp-name">'+st+k.name+'</span><span class="kp-badge">'+m+'/'+t+'</span></div>';
+      h+='<div class="sidebar-kp'+ac+'" onclick="selKP(\''+k.id+'\')"><span class="kp-name">'+st+k.name+'</span><span class="kp-badge">'+m+'/'+t+'</span></div>';
     });
   }
   nav.innerHTML=h||'<div style="padding:20px;text-align:center;color:var(--c-text-muted);font-size:13px">没有匹配的知识点</div>';
@@ -251,7 +251,7 @@ function rSidebar(){
 function rPills(){
   const el=document.getElementById('filter-pills');
   const subs=[{id:'all',name:'全部'},{id:'advanced_math',name:'高等数学'},{id:'linear_algebra',name:'线性代数'},{id:'prob_stats',name:'概率统计'}];
-  el.innerHTML=subs.map(s=>{const cls=state.subjectFilter===s.id?' active':'';return'<span class="filter-pill'+cls+'" onclick="setFilter(''+s.id+'')">'+s.name+'</span>'}).join('');
+  el.innerHTML=subs.map(s=>{const cls=state.subjectFilter===s.id?' active':'';return'<span class="filter-pill'+cls+'" onclick="setFilter(\''+s.id+'\')">'+s.name+'</span>'}).join('');
 }
 function rCard(){
   const kp=cKP();
@@ -289,7 +289,7 @@ function rFormula(f,num){
   let hh='';
   if(f.hint){
     var ht2=f.hint, imgs2='';
-    ht2=ht2.replace(/\[img:([^\]]+)\]/g,function(m,p){imgs2+='<img src="'+p+'" alt="" loading="lazy" onerror="this.style.display='none'" style="max-width:100%;max-height:300px;border-radius:10px;margin-top:8px;display:block;box-shadow:0 1px 3px rgba(0,0,0,0.1)">';return''});
+    ht2=ht2.replace(/\[img:([^\]]+)\]/g,function(m,p){imgs2+='<img src="'+p+'" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="max-width:100%;max-height:300px;border-radius:10px;margin-top:8px;display:block;box-shadow:0 1px 3px rgba(0,0,0,0.1)">';return''});
     ht2=ht2.trim();
     if(ht2) hh+='<div class="formula-hint katex-render">💡 '+esc(ht2)+'</div>';
     if(imgs2) hh+='<div style="padding:0 0 8px 0">'+imgs2+'</div>';
@@ -298,9 +298,9 @@ function rFormula(f,num){
     '<div class="formula-header"><span class="formula-num">'+num+'.</span><span class="formula-name">'+esc(f.name)+'</span><span class="formula-status">'+(m?'已掌握':'待记忆')+'</span></div>'+
     (rv?
       '<div class="formula-answer"><div class="formula-answer-inner"><div class="formula-full katex-render" id="full-'+f.id+'">'+esc(f.full)+'</div>'+hh+
-      '<div class="formula-actions"><button class="btn-master" onclick="markM(''+f.id+'')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'+(m?'已掌握':'记住了')+'</button><button class="btn-forget" onclick="markF(''+f.id+'')">没记住</button><button class="btn-retry" onclick="retry(''+f.id+'')" title="再练一次">↺</button></div></div></div>'
+      '<div class="formula-actions"><button class="btn-master" onclick="markM(\''+f.id+'\')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'+(m?'已掌握':'记住了')+'</button><button class="btn-forget" onclick="markF(\''+f.id+'\')">没记住</button><button class="btn-retry" onclick="retry(\''+f.id+'\')" title="再练一次">↺</button></div></div></div>'
     :
-      '<div class="formula-blank-wrap katex-render" id="blank-'+f.id+'">'+esc(f.blank)+'</div><div class="formula-reveal" onclick="reveal(''+f.id+'')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>点击查看答案</div>')
+      '<div class="formula-blank-wrap katex-render" id="blank-'+f.id+'">'+esc(f.blank)+'</div><div class="formula-reveal" onclick="reveal(\''+f.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>点击查看答案</div>')
   +'</div>';
 }
 function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -336,7 +336,7 @@ function resetCurrentKP(){const kp=cKP();if(!kp)return;showCfm('重置当前知�
 function resetAll(){showCfm('确定清空全部学习进度？此操作不可撤销。',function(){state.mastered={};state.revealed=new Set;saveP();rSidebar();rCard();uStats()})}
 function showCel(m){const el=document.createElement('div');el.className='celebration';el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .5s ease';setTimeout(function(){el.remove()},500)},3000)}
 function showToast(m,t){const el=document.createElement('div');el.className='toast'+(t?' '+t:'');el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(function(){el.remove()},300)},2500)}
-function showCfm(m,cb){const ov=document.createElement('div');ov.className='dialog-overlay';ov.innerHTML='<div class="dialog-box"><p class="dialog-text">'+m+'</p><div class="dialog-actions"><button class="btn-forget" onclick="this.closest('.dialog-overlay').remove()">取消</button><button class="btn-master" id="dok">确定</button></div></div>';document.body.appendChild(ov);ov.querySelector('#dok').onclick=function(){ov.remove();cb()};ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()})}
+function showCfm(m,cb){const ov=document.createElement('div');ov.className='dialog-overlay';ov.innerHTML='<div class="dialog-box"><p class="dialog-text">'+m+'</p><div class="dialog-actions"><button class="btn-forget" onclick="this.closest(\'.dialog-overlay\').remove()">取消</button><button class="btn-master" id="dok">确定</button></div></div>';document.body.appendChild(ov);ov.querySelector('#dok').onclick=function(){ov.remove();cb()};ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()})}
 function shouldDaily(){const today=new Date().toISOString().slice(0,10);return state.dailyLastDate!==today}
 function showDailyModal(f){if(!f&&!shouldDaily())return;document.getElementById('daily-modal').classList.remove('hidden');document.getElementById('bell-dot').style.display='none'}
 function closeDailyModal(){document.getElementById('daily-modal').classList.add('hidden');document.getElementById('bell-dot').style.display='block'}
