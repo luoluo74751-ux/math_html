@@ -1,7 +1,7 @@
 {
-  "name": "考研数学 · 知识点填空练卡",
-  "short_name": "考研数学练卡",
-  "description": "考研数学公式填空自测，60个考点557条公式，离线可用",
+  "name": "洛花·考研数学公式",
+  "short_name": "洛花数学公式",
+  "description": "洛花·考研数学公式填空自测，60个考点557条公式，离线可用",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

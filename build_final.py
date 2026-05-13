@@ -151,12 +151,12 @@ html = r'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="考研数学练卡">
+<meta name="apple-mobile-web-app-title" content="洛花·考研数学公式">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#D4544A">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="data:image/png;base64,__ICON_B64__">
-<title>考研数学 · 知识点填空练卡</title>
+<title>洛花·考研数学公式</title>
 <style>__KATEX_CSS__</style>
 <script>__KATEX_JS__</script>
 <style>
@@ -313,7 +313,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <div id="app">
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside id="sidebar">
-  <div class="sidebar-header"><div class="sidebar-logo">∑</div><span class="sidebar-title">考研数学练卡</span></div>
+  <div class="sidebar-header"><div class="sidebar-logo">∑</div><span class="sidebar-title">洛花·考研数学公式</span></div>
   <nav class="sidebar-nav" id="sidebar-nav"></nav>
   <div style="padding:12px 0;border-top:1px solid var(--c-border-light)" id="sidebar-install-wrap" hidden>
     <button class="sidebar-install" id="btn-install" onclick="doInstall()">
@@ -361,7 +361,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       <ol class="install-steps" id="guide-ios">
         <li><span class="install-step-num">1</span><div class="install-step-text">点击底部 <strong>分享按钮</strong> <span style="font-size:18px">⎙</span><span class="install-step-sub">Safari 工具栏中间的方框箭头图标</span></div></li>
         <li><span class="install-step-num">2</span><div class="install-step-text">滑动找到 <strong>「添加到主屏幕」</strong><span class="install-step-sub">图标是带➕的方框</span></div></li>
-        <li><span class="install-step-num">3</span><div class="install-step-text">点击右上角 <strong>「添加」</strong><span class="install-step-sub">桌面出现考研数学练卡图标即完成</span></div></li>
+        <li><span class="install-step-num">3</span><div class="install-step-text">点击右上角 <strong>「添加」</strong><span class="install-step-sub">桌面出现洛花·考研数学公式图标即完成</span></div></li>
       </ol>
       <ol class="install-steps" id="guide-chrome" style="display:none">
         <li><span class="install-step-num">1</span><div class="install-step-text">点击地址栏右侧 <strong>⋮ 菜单</strong> 或 <strong>⚙ 设置</strong></div></li>
@@ -546,7 +546,7 @@ function closeDailyModal(){document.getElementById('daily-modal').classList.add(
 function toggleSidebar(){const sb=document.getElementById('sidebar'),ov=document.getElementById('sidebar-overlay');sb.classList.toggle('open');ov.classList.toggle('show')}
 function openSettings(){syncToggles();document.getElementById('settings-modal').classList.remove('hidden')}
 function closeSettings(){document.getElementById('settings-modal').classList.add('hidden')}
-function exportProgress(){const d={mastered:state.mastered,date:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='考研数学练卡_进度_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);showToast('进度已导出','success')}
+function exportProgress(){const d={mastered:state.mastered,date:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='洛花·考研数学公式_进度_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);showToast('进度已导出','success')}
 function importProgress(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);if(d.mastered){showCfm('导入将覆盖当前进度，确定吗？',function(){state.mastered=d.mastered;saveP();rSidebar();rCard();uStats();showToast('进度已导入','success')})}else showToast('文件格式无效')}catch(er){showToast('文件格式错误')}};r.readAsText(file);e.target.value=''}
 async function checkUpdate(){try{const r=await fetch('version.txt',{cache:'no-cache'});if(!r.ok)return;const v=(await r.text()).trim();if(v&&v!=='v5.0.0'){showToast('新版本已就绪，3秒后刷新...','update');setTimeout(function(){location.reload()},3000)}}catch(e){}}
 document.addEventListener('keydown',function(e){if(e.target.tagName==='INPUT')return;if(e.key==='e'||e.key==='E')expandAll();if(e.key==='c'||e.key==='C')collapseAll()});
