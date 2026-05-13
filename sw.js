@@ -1,5 +1,5 @@
-const CACHE = 'math-v8';
-const SHELL_KEY = '/__app_shell__';
+const CACHE = 'math-v9';
+const SHELL_KEY = '/__shell__';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -20,25 +20,36 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.open(CACHE).then((cache) => {
       return cache.match(event.request).then((cached) => {
-        const net = fetch(event.request)
-          .then((res) => {
+        if (cached) {
+          // Background refresh
+          fetch(event.request).then((res) => {
             if (res && res.status === 200) {
               cache.put(event.request, res.clone());
-              // Also cache navigations under a fixed key for offline fallback
-              if (event.request.mode === 'navigate') {
-                const shellRes = res.clone();
-                cache.put(new Request(SHELL_KEY), shellRes);
-              }
             }
-            return res;
-          })
-          .catch(() => null);
-
-        if (cached) return cached;
-        if (event.request.mode === 'navigate') {
-          return net.catch(() => cache.match(SHELL_KEY));
+          }).catch(() => {});
+          return cached;
         }
-        return net;
+
+        // Not cached, try network
+        return fetch(event.request).then((res) => {
+          if (res && res.status === 200) {
+            cache.put(event.request, res.clone());
+            if (event.request.mode === 'navigate') {
+              cache.put(new Request(SHELL_KEY), res.clone());
+            }
+          }
+          return res;
+        }).catch(() => {
+          if (event.request.mode === 'navigate') {
+            return cache.match(SHELL_KEY).then((r) => {
+              return r || new Response('需要联网加载，请连接网络后打开', {
+                status: 503,
+                headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+              });
+            });
+          }
+          return new Response('', { status: 408 });
+        });
       });
     })
   );
