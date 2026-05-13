@@ -346,12 +346,22 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <div id="ios-guide-modal" class="modal-overlay hidden">
   <div class="modal-card" style="max-width:380px">
     <button class="modal-close" onclick="closeIOSGuide()">✕</button>
-    <div class="modal-title">📲 添加到桌面</div>
-    <div class="modal-body" style="text-align:left">
-      <ol class="install-steps">
-        <li><span class="install-step-num">1</span><div class="install-step-text">点击浏览器底部 <strong>分享按钮</strong><span class="install-step-sub">Safari 工具栏中间的 <span style="display:inline-block;vertical-align:middle;width:18px;height:18px;border:2px solid var(--c-primary);border-radius:4px;position:relative"><span style="position:absolute;top:2px;left:4px;width:5px;height:5px;border-radius:50%;border:1.5px solid var(--c-primary)"></span><span style="position:absolute;bottom:1px;left:4px;width:6px;height:2px;background:var(--c-primary)"></span></span> 图标</span></div></li>
-        <li><span class="install-step-num">2</span><div class="install-step-text">向下滑动，找到 <strong>「添加到主屏幕」</strong><span class="install-step-sub">图标是带➕的方框</span></div></li>
-        <li><span class="install-step-num">3</span><div class="install-step-text">点击右上角 <strong>「添加」</strong><span class="install-step-sub">即可在桌面看到考研数学练卡图标</span></div></li>
+    <div class="modal-title" id="guide-title">📲 添加到桌面</div>
+    <div class="modal-body" style="text-align:left" id="guide-body">
+      <ol class="install-steps" id="guide-ios">
+        <li><span class="install-step-num">1</span><div class="install-step-text">点击底部 <strong>分享按钮</strong> <span style="font-size:18px">⎙</span><span class="install-step-sub">Safari 工具栏中间的方框箭头图标</span></div></li>
+        <li><span class="install-step-num">2</span><div class="install-step-text">滑动找到 <strong>「添加到主屏幕」</strong><span class="install-step-sub">图标是带➕的方框</span></div></li>
+        <li><span class="install-step-num">3</span><div class="install-step-text">点击右上角 <strong>「添加」</strong><span class="install-step-sub">桌面出现考研数学练卡图标即完成</span></div></li>
+      </ol>
+      <ol class="install-steps" id="guide-chrome" style="display:none">
+        <li><span class="install-step-num">1</span><div class="install-step-text">点击地址栏右侧 <strong>⋮ 菜单</strong> 或 <strong>⚙ 设置</strong></div></li>
+        <li><span class="install-step-num">2</span><div class="install-step-text">选择 <strong>「安装应用」</strong> 或 <strong>「添加到桌面」</strong><span class="install-step-sub">Chrome/Edge 通常在菜单中部</span></div></li>
+        <li><span class="install-step-num">3</span><div class="install-step-text">确认安装<span class="install-step-sub">桌面或开始菜单出现独立应用窗口</span></div></li>
+      </ol>
+      <ol class="install-steps" id="guide-other" style="display:none">
+        <li><span class="install-step-num">1</span><div class="install-step-text">打开浏览器 <strong>菜单</strong>（⋮ 或 ☰）</div></li>
+        <li><span class="install-step-num">2</span><div class="install-step-text">找到 <strong>「添加到主屏幕」</strong> 或 <strong>「安装」</strong></div></li>
+        <li><span class="install-step-num">3</span><div class="install-step-text">点击确认即可<span class="install-step-sub">或使用浏览器地址栏中的 ⊕ 安装图标</span></div></li>
       </ol>
     </div>
     <button class="modal-btn" onclick="closeIOSGuide()">知道了</button>
@@ -500,21 +510,25 @@ var _deferredPrompt=null;
 function initInstall(){
   if(window.matchMedia('(display-mode: standalone)').matches)return;
   if(window.navigator.standalone)return;
-  var wrap=document.getElementById('sidebar-install-wrap');
-  var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
-  if(isIOS){wrap.hidden=false;document.getElementById('btn-install').onclick=function(){document.getElementById('ios-guide-modal').classList.remove('hidden')};return}
-  if(_deferredPrompt){wrap.hidden=false}
+  document.getElementById('sidebar-install-wrap').hidden=false
 }
 function doInstall(){
   if(_deferredPrompt){
     _deferredPrompt.prompt();
     _deferredPrompt.userChoice.then(function(r){if(r.outcome==='accepted'){document.getElementById('sidebar-install-wrap').hidden=true};_deferredPrompt=null})
   }else{
+    var ua=navigator.userAgent;
+    var isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    var isChrome=/Chrome/.test(ua)&&!/Edge/.test(ua)&&!/OPR/.test(ua);
+    var isEdge=/Edg/.test(ua);
+    document.getElementById('guide-ios').style.display=isIOS?'':'none';
+    document.getElementById('guide-chrome').style.display=(isChrome||isEdge)&&!isIOS?'':'none';
+    document.getElementById('guide-other').style.display=(!isIOS&&!isChrome&&!isEdge)?'':'none';
     document.getElementById('ios-guide-modal').classList.remove('hidden')
   }
 }
 function closeIOSGuide(){document.getElementById('ios-guide-modal').classList.add('hidden')}
-window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_deferredPrompt=e;initInstall()});
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_deferredPrompt=e});
 window.addEventListener('appinstalled',function(){document.getElementById('sidebar-install-wrap').hidden=true;_deferredPrompt=null});
 function shouldDaily(){const today=new Date().toISOString().slice(0,10);return state.dailyLastDate!==today}
 function showDailyModal(f){if(!f&&!shouldDaily())return;document.getElementById('daily-modal').classList.remove('hidden');document.getElementById('bell-dot').style.display='none'}
