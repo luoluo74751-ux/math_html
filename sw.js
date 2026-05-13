@@ -1,4 +1,5 @@
-const CACHE = 'math-v7';
+const CACHE = 'math-v8';
+const SHELL_KEY = '/__app_shell__';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -23,17 +24,21 @@ self.addEventListener('fetch', (event) => {
           .then((res) => {
             if (res && res.status === 200) {
               cache.put(event.request, res.clone());
+              // Also cache navigations under a fixed key for offline fallback
+              if (event.request.mode === 'navigate') {
+                const shellRes = res.clone();
+                cache.put(new Request(SHELL_KEY), shellRes);
+              }
             }
             return res;
           })
-          .catch(() => {
-            if (event.request.mode === 'navigate') {
-              return cache.match(event.request.url) || caches.match(event.request);
-            }
-            return cached;
-          });
+          .catch(() => null);
 
-        return cached || net;
+        if (cached) return cached;
+        if (event.request.mode === 'navigate') {
+          return net.catch(() => cache.match(SHELL_KEY));
+        }
+        return net;
       });
     })
   );
