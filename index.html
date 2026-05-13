@@ -337,6 +337,7 @@ function resetAll(){showCfm('确定清空全部学习进度？此操作不可撤
 function showCel(m){const el=document.createElement('div');el.className='celebration';el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .5s ease';setTimeout(function(){el.remove()},500)},3000)}
 function showToast(m,t){const el=document.createElement('div');el.className='toast'+(t?' '+t:'');el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(function(){el.remove()},300)},2500)}
 function showCfm(m,cb){const ov=document.createElement('div');ov.className='dialog-overlay';ov.innerHTML='<div class="dialog-box"><p class="dialog-text">'+m+'</p><div class="dialog-actions"><button class="btn-forget" onclick="this.closest('.dialog-overlay').remove()">取消</button><button class="btn-master" id="dok">确定</button></div></div>';document.body.appendChild(ov);ov.querySelector('#dok').onclick=function(){ov.remove();cb()};ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()})}
+function shouldDaily(){const today=new Date().toISOString().slice(0,10);return state.dailyLastDate!==today}
 function showDailyModal(f){if(!f&&!shouldDaily())return;document.getElementById('daily-modal').classList.remove('hidden');document.getElementById('bell-dot').style.display='none'}
 function closeDailyModal(){document.getElementById('daily-modal').classList.add('hidden');document.getElementById('bell-dot').style.display='block'}
 function toggleSidebar(){const sb=document.getElementById('sidebar'),ov=document.getElementById('sidebar-overlay');sb.classList.toggle('open');ov.classList.toggle('show')}
@@ -354,7 +355,7 @@ function init(){
   setTimeout(checkUpdate,2000);
   if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
 }
-init();
+try{init()}catch(e){document.body.innerHTML='<div style="padding:40px;text-align:center;font-family:sans-serif"><h2>⚠️ 初始化失败</h2><pre style="color:red;text-align:left;max-width:600px;margin:20px auto">'+e.message+'</pre></div>';console.error(e)}
 </script>
 </body>
 </html>
