@@ -566,7 +566,7 @@ try{init()}catch(e){document.body.innerHTML='<div style="padding:40px;text-align
 
 # Embed data (base64 encoded in HTML, decoded at runtime)
 html = html.replace('__ICON_B64__', icon_b64)
-ann_img_html = '<img src="data:image/jpeg;base64,' + ann_img_b64 + '" style="display:block;max-width:100%;max-height:200px;border-radius:12px;margin:0 auto 14px;box-shadow:0 2px 12px rgba(0,0,0,.1)" alt="">' if ann_img_b64 else ''
+ann_img_html = '<img src="data:image/jpeg;base64,' + ann_img_b64 + '" style="display:block;width:100%;border-radius:12px;margin:0 auto 14px;box-shadow:0 2px 12px rgba(0,0,0,.1)" alt="">' if ann_img_b64 else ''
 html = html.replace('__ANNOUNCE_IMG__', ann_img_html)
 html = html.replace('__DATA_B64__', kps_b64)
 html = html.replace('__TOTAL_PLACEHOLDER__', str(data['total_formulas']))
