@@ -107,6 +107,14 @@ icon_png = generate_apple_icon_png(180)
 icon_b64 = base64.b64encode(icon_png).decode('ascii')
 print(f'Generated icon: {len(icon_png)} bytes')
 
+# Load announcement image
+ann_img_path = os.path.join(BASE, 'default.jpg')
+ann_img_b64 = ''
+if os.path.exists(ann_img_path):
+    with open(ann_img_path, 'rb') as f:
+        ann_img_b64 = base64.b64encode(f.read()).decode('ascii')
+    print(f'Announcement image: {len(ann_img_b64)} chars base64')
+
 with open(os.path.join(BASE, '知识梳理_v3.json'), 'r', encoding='utf-8') as f:
     data = json.load(f)
 
@@ -340,7 +348,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     <button class="modal-close" onclick="closeDailyModal()">✕</button>
     <div class="modal-title">📐 公式不记，考场流泪</div>
     <div class="modal-body">
-      <svg viewBox="0 0 120 60" width="120" height="60" style="display:block;margin:0 auto 14px"><rect x="10" y="18" width="28" height="24" rx="3" fill="var(--c-primary)" opacity=".15"/><text x="24" y="37" text-anchor="middle" font-size="16" fill="var(--c-primary)">∫</text><rect x="46" y="18" width="28" height="24" rx="3" fill="var(--c-accent)" opacity=".15"/><text x="60" y="37" text-anchor="middle" font-size="16" fill="var(--c-accent)">∑</text><rect x="82" y="18" width="28" height="24" rx="3" fill="var(--c-success)" opacity=".15"/><text x="96" y="37" text-anchor="middle" font-size="16" fill="var(--c-success)">lim</text></svg>
+      __ANNOUNCE_IMG__
       <p style="font-size:14px;color:var(--c-text);margin-bottom:8px">每天10分钟，557条公式烂熟于心</p><p style="font-size:12px;color:var(--c-text-muted)">你的对手已经在刷了</p></div>
     <button class="modal-btn" onclick="closeDailyModal()">开始学习</button>
   </div>
@@ -558,6 +566,8 @@ try{init()}catch(e){document.body.innerHTML='<div style="padding:40px;text-align
 
 # Embed data (base64 encoded in HTML, decoded at runtime)
 html = html.replace('__ICON_B64__', icon_b64)
+ann_img_html = '<img src="data:image/jpeg;base64,' + ann_img_b64 + '" style="display:block;max-width:100%;max-height:200px;border-radius:12px;margin:0 auto 14px;box-shadow:0 2px 12px rgba(0,0,0,.1)" alt="">' if ann_img_b64 else ''
+html = html.replace('__ANNOUNCE_IMG__', ann_img_html)
 html = html.replace('__DATA_B64__', kps_b64)
 html = html.replace('__TOTAL_PLACEHOLDER__', str(data['total_formulas']))
 html = html.replace('__KATEX_CSS__', katex_css)
