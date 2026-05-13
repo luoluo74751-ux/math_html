@@ -1,4 +1,4 @@
-const CACHE = 'math-v6';
+const CACHE = 'math-v7';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -26,7 +26,12 @@ self.addEventListener('fetch', (event) => {
             }
             return res;
           })
-          .catch(() => cached);
+          .catch(() => {
+            if (event.request.mode === 'navigate') {
+              return cache.match(event.request.url) || caches.match(event.request);
+            }
+            return cached;
+          });
 
         return cached || net;
       });

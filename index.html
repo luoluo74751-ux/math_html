@@ -409,7 +409,7 @@ function init(){
   const kps=fKPs();if(kps.length>0){state.currentKP=kps[0].id;rSidebar();rCard()}
   setTimeout(function(){if(shouldDaily())showDailyModal(true)},600);
   setTimeout(checkUpdate,2000);
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){})}
   setTimeout(initInstall,1200)
 }
 try{init()}catch(e){document.body.innerHTML='<div style="padding:40px;text-align:center;font-family:sans-serif"><h2>⚠️ 初始化失败</h2><pre style="color:red;text-align:left;max-width:600px;margin:20px auto">'+e.message+'</pre></div>';console.error(e)}
