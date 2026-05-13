@@ -73,6 +73,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 .sidebar-btn{width:100%;height:34px;border-radius:var(--radius-sm);border:1px solid var(--c-border);background:var(--c-surface);font-size:12.5px;font-weight:500;cursor:pointer;color:var(--c-text-secondary);font-family:var(--font-body);transition:all .15s var(--ease-out);display:flex;align-items:center;justify-content:center;gap:4px}
 .sidebar-btn:hover{background:var(--c-bg-alt);color:var(--c-text)}
 .sidebar-btn.danger:hover{background:var(--c-primary-light);color:var(--c-primary);border-color:var(--c-primary)}
+.sidebar-install{width:100%;padding:10px 12px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--c-primary),var(--c-accent));color:#FFF;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all .15s var(--ease-out);display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 12px rgba(212,84,74,.3)}
+.sidebar-install:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(212,84,74,.4)}.sidebar-install:active{transform:scale(.97)}
+.install-steps{text-align:left;padding:0;list-style:none}.install-steps li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--c-border-light)}.install-steps li:last-child{border-bottom:none}.install-step-num{width:26px;height:26px;border-radius:50%;background:var(--c-primary);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}.install-step-text{font-size:13.5px;color:var(--c-text);line-height:1.5}.install-step-sub{font-size:11.5px;color:var(--c-text-muted);margin-top:2px}
 #main{flex:1;display:flex;flex-direction:column;padding:28px 36px;min-width:0}
 .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:12px}
 .top-bar-right{display:flex;align-items:center;gap:8px}
@@ -167,6 +170,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <aside id="sidebar">
   <div class="sidebar-header"><div class="sidebar-logo">∑</div><span class="sidebar-title">考研数学练卡</span></div>
   <nav class="sidebar-nav" id="sidebar-nav"></nav>
+  <div style="padding:12px 0;border-top:1px solid var(--c-border-light)" id="sidebar-install-wrap" hidden>
+    <button class="sidebar-install" id="btn-install" onclick="doInstall()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>添加到桌面
+    </button>
+  </div>
 </aside>
 <main id="main">
   <div class="top-bar">
@@ -196,6 +204,20 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     <div class="modal-title">🚀 坚持下去，你终将上岸！</div>
     <div class="modal-body"><p style="font-size:14px;color:var(--c-text);margin-bottom:8px">每一个填空都是通往研究生的台阶</p><p style="font-size:12px;color:var(--c-text-muted)">今日打卡 · 不负光阴</p></div>
     <button class="modal-btn" onclick="closeDailyModal()">开始学习</button>
+  </div>
+</div>
+<div id="ios-guide-modal" class="modal-overlay hidden">
+  <div class="modal-card" style="max-width:380px">
+    <button class="modal-close" onclick="closeIOSGuide()">✕</button>
+    <div class="modal-title">📲 添加到桌面</div>
+    <div class="modal-body" style="text-align:left">
+      <ol class="install-steps">
+        <li><span class="install-step-num">1</span><div class="install-step-text">点击浏览器底部 <strong>分享按钮</strong><span class="install-step-sub">Safari 工具栏中间的 <span style="display:inline-block;vertical-align:middle;width:18px;height:18px;border:2px solid var(--c-primary);border-radius:4px;position:relative"><span style="position:absolute;top:2px;left:4px;width:5px;height:5px;border-radius:50%;border:1.5px solid var(--c-primary)"></span><span style="position:absolute;bottom:1px;left:4px;width:6px;height:2px;background:var(--c-primary)"></span></span> 图标</span></div></li>
+        <li><span class="install-step-num">2</span><div class="install-step-text">向下滑动，找到 <strong>「添加到主屏幕」</strong><span class="install-step-sub">图标是带➕的方框</span></div></li>
+        <li><span class="install-step-num">3</span><div class="install-step-text">点击右上角 <strong>「添加」</strong><span class="install-step-sub">即可在桌面看到考研数学练卡图标</span></div></li>
+      </ol>
+    </div>
+    <button class="modal-btn" onclick="closeIOSGuide()">知道了</button>
   </div>
 </div>
 <div id="settings-modal" class="modal-overlay hidden">
@@ -337,6 +359,26 @@ function resetAll(){showCfm('确定清空全部学习进度？此操作不可撤
 function showCel(m){const el=document.createElement('div');el.className='celebration';el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .5s ease';setTimeout(function(){el.remove()},500)},3000)}
 function showToast(m,t){const el=document.createElement('div');el.className='toast'+(t?' '+t:'');el.textContent=m;document.body.appendChild(el);setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(function(){el.remove()},300)},2500)}
 function showCfm(m,cb){const ov=document.createElement('div');ov.className='dialog-overlay';ov.innerHTML='<div class="dialog-box"><p class="dialog-text">'+m+'</p><div class="dialog-actions"><button class="btn-forget" onclick="this.closest(\'.dialog-overlay\').remove()">取消</button><button class="btn-master" id="dok">确定</button></div></div>';document.body.appendChild(ov);ov.querySelector('#dok').onclick=function(){ov.remove();cb()};ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()})}
+var _deferredPrompt=null;
+function initInstall(){
+  if(window.matchMedia('(display-mode: standalone)').matches)return;
+  if(window.navigator.standalone)return;
+  var wrap=document.getElementById('sidebar-install-wrap');
+  var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  if(isIOS){wrap.hidden=false;document.getElementById('btn-install').onclick=function(){document.getElementById('ios-guide-modal').classList.remove('hidden')};return}
+  if(_deferredPrompt){wrap.hidden=false}
+}
+function doInstall(){
+  if(_deferredPrompt){
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(function(r){if(r.outcome==='accepted'){document.getElementById('sidebar-install-wrap').hidden=true};_deferredPrompt=null})
+  }else{
+    document.getElementById('ios-guide-modal').classList.remove('hidden')
+  }
+}
+function closeIOSGuide(){document.getElementById('ios-guide-modal').classList.add('hidden')}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_deferredPrompt=e;initInstall()});
+window.addEventListener('appinstalled',function(){document.getElementById('sidebar-install-wrap').hidden=true;_deferredPrompt=null});
 function shouldDaily(){const today=new Date().toISOString().slice(0,10);return state.dailyLastDate!==today}
 function showDailyModal(f){if(!f&&!shouldDaily())return;document.getElementById('daily-modal').classList.remove('hidden');document.getElementById('bell-dot').style.display='none'}
 function closeDailyModal(){document.getElementById('daily-modal').classList.add('hidden');document.getElementById('bell-dot').style.display='block'}
@@ -354,6 +396,7 @@ function init(){
   setTimeout(function(){if(shouldDaily())showDailyModal(true)},600);
   setTimeout(checkUpdate,2000);
   if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+  setTimeout(initInstall,1200)
 }
 try{init()}catch(e){document.body.innerHTML='<div style="padding:40px;text-align:center;font-family:sans-serif"><h2>⚠️ 初始化失败</h2><pre style="color:red;text-align:left;max-width:600px;margin:20px auto">'+e.message+'</pre></div>';console.error(e)}
 </script>
